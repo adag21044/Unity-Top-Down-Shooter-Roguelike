@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private float jumpHeight = 1.0f;
     private float gravityValue = -9.81f;
     public PlayerInput playerInput;
+    public EnemyDetector enemyDetector; // EnemyDetector script'inin referansı
 
     private void Awake()
     {
@@ -39,9 +40,16 @@ public class PlayerController : MonoBehaviour
         Vector3 move = new Vector3(movementInput.x, 0, movementInput.y);
         controller.Move(move * Time.deltaTime * playerSpeed);
 
-        if (move != Vector3.zero)
+        if (enemyDetector != null && enemyDetector.detectedEnemyTransform != null)
         {
-            gameObject.transform.forward = move;
+            Vector3 directionToEnemy = enemyDetector.detectedEnemyTransform.position - transform.position;
+            directionToEnemy.y = 0;
+
+            if (directionToEnemy != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(directionToEnemy);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+            }
         }
 
         playerVelocity.y += gravityValue * Time.deltaTime;
@@ -50,6 +58,6 @@ public class PlayerController : MonoBehaviour
 
     public Transform GetPlayerTransform()
     {
-        return this.transform;
+        return transform;
     }
 }
