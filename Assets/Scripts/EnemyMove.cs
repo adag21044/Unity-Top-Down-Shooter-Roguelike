@@ -2,14 +2,15 @@ using UnityEngine;
 
 public class EnemyMove : MonoBehaviour
 {
-    [SerializeField]private Transform playerTransform;
+    [SerializeField] private Transform playerTransform;
     private float moveSpeed = 10f;
     private float rotationSpeed = 3f;
 
-    
-
     private void Update()
     {
+        // Eğer playerTransform veya gameObject yok edilmişse, hareket etmeyi durdur
+        if (playerTransform == null || this == null) return;
+
         Vector3 directionToPlayer = playerTransform.position - transform.position;
         directionToPlayer.y = 0;
 
@@ -20,5 +21,5 @@ public class EnemyMove : MonoBehaviour
         }
 
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
-    }    
+    }
 }
