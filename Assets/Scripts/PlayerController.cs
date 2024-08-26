@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
-
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
