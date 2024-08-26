@@ -1,18 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyMove : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]private Transform playerTransform;
+    private float moveSpeed = 10f;
+    private float rotationSpeed = 3f;
 
-    // Update is called once per frame
-    void Update()
+    
+
+    private void Update()
     {
-        
-    }
+        Vector3 directionToPlayer = playerTransform.position - transform.position;
+        directionToPlayer.y = 0;
+
+        if (directionToPlayer != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
+
+        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+    }    
 }
