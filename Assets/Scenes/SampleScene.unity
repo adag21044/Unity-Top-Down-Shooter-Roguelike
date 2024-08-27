@@ -727,6 +727,7 @@ GameObject:
   - component: {fileID: 252589924}
   - component: {fileID: 252589923}
   - component: {fileID: 252589927}
+  - component: {fileID: 252589928}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -814,7 +815,7 @@ Transform:
   m_GameObject: {fileID: 252589922}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 36.1, y: -0.3, z: 14.12}
+  m_LocalPosition: {x: 1.41, y: 0.82, z: -4.9}
   m_LocalScale: {x: 4.18, y: 4.18, z: 4.18}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -833,6 +834,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 1731730961}
+--- !u!54 &252589928
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252589922}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &288106296 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5211766094114403676, guid: 813ece5825a233c4895f2eeabbb341ea,
@@ -854,6 +882,7 @@ MonoBehaviour:
   speed: 10
   destroyDelay: 0.1
   lifeSpan: 5
+  muzzleParticleSystem: {fileID: 0}
 --- !u!65 &288106301
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -869,7 +898,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3

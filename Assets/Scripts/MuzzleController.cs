@@ -5,6 +5,8 @@ public class MuzzleController : MonoBehaviour
     public float speed = 10f; // Muzzle'ın hızı
     public float destroyDelay = 0.1f; // Çarpmadan sonra yok edilmeden önceki gecikme süresi
     public float lifeSpan = 5f; // Muzzle'ın yaşam süresi
+    public ParticleSystem muzzleParticleSystem; // Particle System referansı
+
     private Vector3 moveDirection;
 
     private void Start()
@@ -28,20 +30,32 @@ public class MuzzleController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject != null && other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
-            // EnemyMove scriptini devre dışı bırak
-            var enemyMove = other.GetComponent<EnemyMove>();
-            if (enemyMove != null)
-            {
-                enemyMove.enabled = false; // Yok etmeden önce hareketi durdur
-            }
-
-            Debug.Log(other.name + " is hit by muzzle");
-
-            Destroy(other.gameObject); // Hedefi yok et
-            //Destroy(gameObject, destroyDelay); // Muzzle'ı yok et
+            DestroyEnemy(other.gameObject);
         }
     }
 
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            DestroyEnemy(other);
+        }
+    }
+
+    private void DestroyEnemy(GameObject enemy)
+    {
+        // EnemyMove scriptini devre dışı bırak
+        var enemyMove = enemy.GetComponent<EnemyMove>();
+        if (enemyMove != null)
+        {
+            enemyMove.enabled = false; // Yok etmeden önce hareketi durdur
+        }
+
+        Debug.Log(enemy.name + " is hit and destroyed by muzzle");
+
+        Destroy(enemy); // Hedefi yok et
+        Destroy(gameObject, destroyDelay); // Muzzle'ı yok et
+    }
 }
