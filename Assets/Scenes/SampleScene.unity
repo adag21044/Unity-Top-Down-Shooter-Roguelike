@@ -7298,11 +7298,11 @@ MonoBehaviour:
   shootPoint: {fileID: 603540400}
   muzzlePool: {fileID: 428374259}
   bulletIcons:
+  - {fileID: 1103439565}
   - {fileID: 1686916222}
   - {fileID: 1010865288}
   - {fileID: 676163854}
   - {fileID: 42271723}
-  - {fileID: 1103439565}
 --- !u!143 &1731730963
 CharacterController:
   m_ObjectHideFlags: 0
