@@ -7292,7 +7292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0b16eea901ae45449e371477151627f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInput: {fileID: 0}
+  playerInput: {fileID: 1731730964}
   enemyDetector: {fileID: 1731730966}
   muzzlePrefab: {fileID: 0}
   shootPoint: {fileID: 603540400}
