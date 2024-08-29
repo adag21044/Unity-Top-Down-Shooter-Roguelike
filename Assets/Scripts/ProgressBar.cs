@@ -7,8 +7,7 @@ public class ProgressBar : MonoBehaviour
 {
     [SerializeField] private Image ProgressImage;
     [SerializeField] private float DefaultSpeed = 1f;
-    //[SerializeField] private UnityEvent<float> OnProgress;
-    //[SerializeField] private UnityEvent OnCompleted;
+    
 
     private Coroutine AnimationCoroutine;
 
@@ -57,12 +56,11 @@ public class ProgressBar : MonoBehaviour
             ProgressImage.fillAmount = Mathf.Lerp(initialProgress, progress, time);
             time += Time.deltaTime * speed;
 
-            //OnProgress?.Invoke(ProgressImage.fillAmount);
+            
             yield return null;
         }
 
         ProgressImage.fillAmount = progress;
-        //OnProgress?.Invoke(progress);
-        //OnCompleted?.Invoke();
+        
     }
 }
