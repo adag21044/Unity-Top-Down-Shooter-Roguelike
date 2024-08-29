@@ -7292,9 +7292,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0b16eea901ae45449e371477151627f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInput: {fileID: 1731730964}
+  playerInput: {fileID: 0}
   enemyDetector: {fileID: 1731730966}
-  muzzlePrefab: {fileID: 288106296}
+  muzzlePrefab: {fileID: 0}
   shootPoint: {fileID: 603540400}
   muzzlePool: {fileID: 428374259}
   bulletIcons:
@@ -7698,10 +7698,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48.64
+  m_fontSize: 44.75
   m_fontSizeBase: 48.64
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
