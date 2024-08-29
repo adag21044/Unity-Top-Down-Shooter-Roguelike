@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,14 +10,21 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     private bool groundedPlayer;
     private float playerSpeed = 50.0f;
-    private float jumpHeight = 1.0f;
     private float gravityValue = -9.81f;
     public PlayerInput playerInput;
     public EnemyDetector enemyDetector; // EnemyDetector script'inin referansı
     public GameObject muzzlePrefab; // Muzzle prefab'ı
     public Transform shootPoint; // Muzzle'ın çıkış noktası
-    private float shootInterval = 1.0f; // Ateş etme aralığı
+    public ObjectPool muzzlePool;
+
+    private int maxBullets = 5; // Maksimum mermi sayısı
+    private int currentBullets; // Mevcut mermi sayısı
+    private float reloadTime = 1f; // Mermi dolum süresi
+    private float shootInterval = 0.5f; // Ateş etme aralığı
     private float lastShootTime; // Son ateş zamanı
+    private float lastReloadTime; // Son yeniden yükleme zamanı
+
+    [SerializeField] private List<Image> bulletIcons = new List<Image>(); // UI Mermi ikonları
 
     private void Awake()
     {
@@ -30,6 +39,8 @@ public class PlayerController : MonoBehaviour
 
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
+        currentBullets = maxBullets;
+        UpdateUI();
     }
 
     void Update()
@@ -44,7 +55,15 @@ public class PlayerController : MonoBehaviour
         Vector3 move = new Vector3(movementInput.x, 0, movementInput.y);
         controller.Move(move * Time.deltaTime * playerSpeed);
 
-        // Null kontrolü yapın
+        // Mermi yeniden yükleme kontrolü
+        if (Time.time > lastReloadTime + reloadTime && currentBullets < maxBullets)
+        {
+            currentBullets++;
+            UpdateUI();
+            lastReloadTime = Time.time;
+        }
+
+        // Düşman tespiti ve ateş etme kontrolü
         if (enemyDetector != null && enemyDetector.detectedEnemyTransform != null)
         {
             Vector3 directionToEnemy = enemyDetector.detectedEnemyTransform.position - transform.position;
@@ -55,10 +74,12 @@ public class PlayerController : MonoBehaviour
                 Quaternion targetRotation = Quaternion.LookRotation(directionToEnemy);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
 
-                // Ateş etme zamanı geldi mi kontrol et
-                if (Time.time > lastShootTime + shootInterval)
+                // Ateş etme zamanı geldi mi kontrol et ve mermiler varsa ateş et
+                if (currentBullets > 0 && Time.time > lastShootTime + shootInterval)
                 {
-                    Shoot(); // Shoot fonksiyonunda tekrar null kontrolü yapılacak
+                    Shoot();
+                    currentBullets--;
+                    UpdateUI();
                     lastShootTime = Time.time;
                 }
             }
@@ -68,6 +89,29 @@ public class PlayerController : MonoBehaviour
         controller.Move(playerVelocity * Time.deltaTime);
     }
 
+    private void UpdateUI()
+    {
+        for (int i = 0; i < bulletIcons.Count; i++)
+        {
+            if (i < currentBullets)
+            {
+                bulletIcons[i].color = new Color(1, 1, 1, 1); // Normal görünüm
+            }
+            else
+            {
+                // Transparan görünüm
+                // Mevcut renk değerini al
+                Color color = bulletIcons[i].color;
+
+                // Alpha değerini güncelle
+                color.a = 0.33f;
+
+                // Güncellenmiş rengi Image bileşenine ata
+                bulletIcons[i].color = color;
+            }
+        }
+    }
+
     public Transform GetPlayerTransform()
     {
         return transform;
@@ -75,35 +119,12 @@ public class PlayerController : MonoBehaviour
 
     public void Shoot()
     {
-        if (muzzlePrefab == null)
-        {
-            Debug.LogError("Muzzle prefab is null");
-            return;
-        }
+        GameObject muzzleInstance = muzzlePool.GetObject();
+        muzzleInstance.transform.position = shootPoint.position;
+        muzzleInstance.transform.rotation = shootPoint.rotation;
 
-        // Muzzle prefab'ını instantiate et
-        GameObject muzzleInstance = Instantiate(muzzlePrefab, shootPoint.position, shootPoint.rotation);
-
-        // MuzzleController'ı al
         MuzzleController muzzleController = muzzleInstance.GetComponent<MuzzleController>();
-
-        if (enemyDetector.detectedEnemyTransform == null)
-        {
-            Debug.LogWarning("No detected enemy, destroying muzzle instance");
-            Destroy(muzzleInstance);
-            return;
-        }
-
-        if (muzzleController == null)
-        {
-            Debug.LogError("MuzzleController component is missing on the muzzle instance");
-            Destroy(muzzleInstance);
-            return;
-        }
-
         Vector3 directionToEnemy = (enemyDetector.detectedEnemyTransform.position - shootPoint.position).normalized;
         muzzleController.SetDirection(directionToEnemy);
     }
-
-
 }
